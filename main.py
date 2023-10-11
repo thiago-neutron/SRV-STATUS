@@ -42,12 +42,23 @@ def test_http_connection(url, id):
         valor = (str(id) +":0")
         arraytoout.append(valor)
 
-
 def base64decode(stringcoded):
     decoded_bytes = base64.b64decode(stringcoded)
     decoded_string = decoded_bytes.decode('utf-8')
     return decoded_string
 
+def postapi():
+    url = 'http://192.168.10.220/system/update_panel_sactus/api/get_list.php'
+    dados = {'category': 'access'}
+    dados_json = json.dumps(dados)
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(url, data=dados_json, headers=headers)
+
+    if response.status_code == 200:
+        resposta_json = response.json()
+        if resposta_json.get("status") == True:
+            print("get ok")
+            
 code = getapi()
 decoded_string = base64decode(code)
 array = json.loads(decoded_string)
@@ -68,18 +79,9 @@ for elemento in array:
     else:
         listajm.append(id)
 
-
-
 print(arraytoout)
-
-
-
 json_string = json.dumps(arraytoout)
-nome_arquivo = "saida.json"
-with open(nome_arquivo, "w") as arquivo:
-    arquivo.write(json_string)
 
-print(f'Saída JSON foi salva em "{nome_arquivo}"')
 
     
 
