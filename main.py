@@ -25,21 +25,21 @@ def getapi():
         print(f'Erro na solicitação. Código de status: {response.status_code}')
     return message_value
 
-def test_http_connection(url, id):
+def test_http_connection(url, id, cnpj):
     try:
         response = requests.get(url, timeout=10)
         response.raise_for_status()  
         
         if response.status_code == 200:
             #print(f"Conexão HTTP para {url} bem-sucedida. Código de status: {response.status_code}")
-            valor = (str(id) +":1")
+            valor = (str(id) +":1, " +str(cnpj))
             arraytoout.append(valor)
         else:
             print(f"Conexão HTTP para {url} não retornou o código de status 200.")
 
     except requests.exceptions.RequestException as e:
         #print(f"Erro na conexão HTTP para {url}: {e}")
-        valor = (str(id) +":0")
+        valor = (str(id) +":0, " +str(cnpj))
         arraytoout.append(valor)
 
 def base64decode(stringcoded):
@@ -75,7 +75,7 @@ for elemento in array:
 
     if ipex != "jmconsultorias.com.br":
         url = ('http://' +str(ipex) +":" +str(porta))
-        test_http_connection(url, id)
+        test_http_connection(url, id, cnpj)
     else:
         listajm.append(id)
 
