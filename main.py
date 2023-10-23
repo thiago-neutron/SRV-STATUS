@@ -36,14 +36,20 @@ def getapi():
     #POST
     response = requests.post(url, data=dados_json, headers=headers)
     #TRATAMENTO E RETURN DOS DADOS OBTIDOS
-    if response.status_code == 200:
-        resposta_json = response.json()
-        if resposta_json.get("status") == True:
-            print("get ok")
-            message_value = resposta_json.get("message")
-    else:
-        print(f'Erro na solicitação. Código de status: {response.status_code}')
-    return message_value
+    while True:
+        try:
+            response = requests.post(url, data=dados_json, headers=headers)
+            response.raise_for_status()  # Isso gera uma exceção se o código de resposta não for 2xx
+            resposta_json = response.json()
+            if resposta_json.get("status") == True:
+                print("get ok")
+                message_value = resposta_json.get("message")
+                return message_value
+        except requests.exceptions.RequestException as e:
+            print("Erro na requisição:", e)
+            # Espera um tempo antes de tentar novamente (evitar sobrecarregar o servidor)
+            time.sleep(5)
+            continue 
 #____FIM DA FUNCAO____
 
 #____TESTEHTTPCONN, FUNCAO PARA TESTAR SE O CLIENTE ESTA OFFLINE____
